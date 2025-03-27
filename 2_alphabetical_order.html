@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabetize Your Text</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2b2b2b;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #3a3a3a;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 15px;
+            background: #555;
+            color: white;
+            text-align: center;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        button {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .sort-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        .sort-btn:hover {
+            background-color: #217dbb;
+        }
+        .clear-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .clear-btn:hover {
+            background-color: #c0392b;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 15px;
+            background-color: #444;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Alphabetize Your Text</h1>
+        <input type="text" id="inputString" placeholder="Type something..." />
+        <div class="btn-container">
+            <button class="sort-btn" onclick="sortString()">Sort</button>
+            <button class="clear-btn" onclick="clearInput()">Clear</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function sortString() {
+            const inputStr = document.getElementById("inputString").value.trim();
+            if (inputStr === "") {
+                document.getElementById("result").innerHTML = "Please enter text!";
+                return;
+            }
+            const sortedStr = inputStr.toLowerCase().split("").sort().join("");
+            document.getElementById("result").innerHTML = `<strong>Original:</strong> ${inputStr}<br>
+                 <strong>Sorted:</strong> ${sortedStr}`;
+        }
+
+        function clearInput() {
+            document.getElementById("inputString").value = "";
+            document.getElementById("result").innerHTML = "";
+        }
+    </script>
+</body>
+</html>

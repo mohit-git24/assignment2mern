@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Form Checker</title>
+    <style>
+      .error-msg {
+        color: red;
+        font-size: 14px;
+      }
+      input, textarea {
+        border: 2px solid black;
+        padding: 6px;
+        margin-bottom: 6px;
+      }
+      .invalid {
+        border-color: red;
+      }
+    </style>
+    <script>
+      function checkForm() {
+        let isValid = true;
+        let fields = ["fullname", "email", "url", "message"];
+        
+        fields.forEach((field) => {
+          let input = document.getElementById(field);
+          let errorMsg = document.getElementById(field + "Error");
+          errorMsg.innerText = "";
+          input.classList.remove("invalid");
+          
+          if (input.value.trim() === "") {
+            errorMsg.innerText = "Required field";
+            input.classList.add("invalid");
+            isValid = false;
+          }
+        });
+        
+        let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let emailInput = document.getElementById("email");
+        if (!emailPattern.test(emailInput.value.trim())) {
+          document.getElementById("emailError").innerText = "Invalid email format";
+          emailInput.classList.add("invalid");
+          isValid = false;
+        }
+        
+        let urlPattern = /^(https?:\/\/)?[\w.-]+\.[a-z]{2,}(\/.*)?$/i;
+        let urlInput = document.getElementById("url");
+        if (!urlPattern.test(urlInput.value.trim())) {
+          document.getElementById("urlError").innerText = "Invalid URL";
+          urlInput.classList.add("invalid");
+          isValid = false;
+        }
+        return isValid;
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Form Checker</h2>
+    <form onsubmit="return checkForm()">
+      <label>Full Name:</label>
+      <input type="text" id="fullname" />
+      <span class="error-msg" id="fullnameError"></span><br />
+
+      <label>Email:</label>
+      <input type="text" id="email" />
+      <span class="error-msg" id="emailError"></span><br />
+
+      <label>Website URL:</label>
+      <input type="text" id="url" />
+      <span class="error-msg" id="urlError"></span><br />
+
+      <label>Message:</label>
+      <textarea id="message"></textarea>
+      <span class="error-msg" id="messageError"></span><br />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

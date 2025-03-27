@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Calculator</title>
+</head>
+<body>
+    <h2>Simple Multiplication & Division</h2>
+    <label>Enter First Number: </label>
+    <input type="number" id="firstNumber"><br><br>
+    <label>Enter Second Number: </label>
+    <input type="number" id="secondNumber"><br><br>
+    <button onclick="calculate('multiply')">Multiply</button>
+    <button onclick="calculate('divide')">Divide</button>
+    <h3>Result:</h3>
+    <p id="output"></p>
+
+    <script>
+        function calculate(operation) {
+            let num1 = parseFloat(document.getElementById('firstNumber').value);
+            let num2 = parseFloat(document.getElementById('secondNumber').value);
+            let result;
+            
+            if (operation === 'multiply') {
+                result = num1 * num2;
+            } else if (operation === 'divide') {
+                result = num2 !== 0 ? num1 / num2 : "Error: Division by zero";
+            }
+            
+            document.getElementById('output').innerText = result;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background-color: #f8f9fa; padding: 20px; }
+    .card { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); }
+    .search-bar { margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4">User Registration System</h2>
+    
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">Register User</div>
+      <div class="card-body">
+        <form id="registrationForm">
+          <input type="hidden" id="editIndex" value="-1">
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="name" required />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" required />
+          </div>
+          <div class="mb-3">
+            <label for="contact" class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="contact" pattern="\d{10}" required />
+          </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea class="form-control" id="address" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+        <div id="message" class="mt-3"></div>
+      </div>
+    </div>
+    
+    <input type="text" id="search" class="form-control search-bar" placeholder="Search users...">
+    
+    <div class="card">
+      <div class="card-header bg-success text-white">Registered Users</div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Contact</th>
+              <th>Address</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const contact = document.getElementById("contact").value;
+      const address = document.getElementById("address").value;
+      const editIndex = document.getElementById("editIndex").value;
+
+      if (users.some(user => user.email === email && editIndex == -1)) {
+        alert("Email already registered!");
+        return;
+      }
+
+      const user = { id: Date.now(), name, email, contact, address };
+      if (editIndex == -1) {
+        users.push(user);
+      } else {
+        users[editIndex] = user;
+      }
+
+      localStorage.setItem("users", JSON.stringify(users));
+      document.getElementById("registrationForm").reset();
+      document.getElementById("editIndex").value = "-1";
+      displayUsers();
+    });
+
+    function displayUsers() {
+      const tbody = document.getElementById("userTableBody");
+      tbody.innerHTML = users.length === 0 ? `<tr><td colspan="6" class="text-center">No users registered</td></tr>` : "";
+      users.forEach((user, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.contact}</td>
+            <td>${user.address}</td>
+            <td>
+              <button class="btn btn-warning btn-sm" onclick="editUser(${index})">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteUser(${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function editUser(index) {
+      document.getElementById("name").value = users[index].name;
+      document.getElementById("email").value = users[index].email;
+      document.getElementById("contact").value = users[index].contact;
+      document.getElementById("address").value = users[index].address;
+      document.getElementById("editIndex").value = index;
+    }
+
+    function deleteUser(index) {
+      if (confirm("Are you sure you want to delete this user?")) {
+        users.splice(index, 1);
+        localStorage.setItem("users", JSON.stringify(users));
+        displayUsers();
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", function() {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll("#userTableBody tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(query) ? "" : "none";
+      });
+    });
+
+    displayUsers();
+  </script>
+</body>
+</html>
